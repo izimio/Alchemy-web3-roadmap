@@ -7,7 +7,7 @@ import "./App.scss";
 
 import { useWallet } from "./provider/WalletProvider";
 import ConnectModal from "./ConnectModal";
-
+import Faucet from "./Faucet";
 function App() {
   const { isLogged } = useWallet();
 
@@ -18,6 +18,7 @@ function App() {
     <div className="app">
       <Wallet/>
       <Transfer />
+      <Faucet />
       <WalletWatcher />
     </div>
   );

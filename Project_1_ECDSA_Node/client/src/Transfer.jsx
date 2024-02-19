@@ -1,31 +1,60 @@
 import { useState } from "react";
 import server from "./server";
+import { useWallet } from "./provider/WalletProvider";
+import { keccak256 } from "ethereum-cryptography/keccak";
+import { utf8ToBytes } from "ethereum-cryptography/utils";
+import { secp256k1 } from "ethereum-cryptography/secp256k1";
+import toast from "react-hot-toast";
 
-function Transfer({ address, setBalance }) {
+function hashMessage(message) {
+  const bytes = utf8ToBytes(message);
+  const hash = keccak256(bytes);
+
+  return hash;
+}
+
+async function signMessage(msg, PRIVATE_KEY) {
+  const hash = hashMessage(msg);
+  console.log("hash", hash);
+  const signature =  secp256k1.sign(hash, PRIVATE_KEY);
+  return signature;
+}
+
+function Transfer() {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
-
   const setValue = (setter) => (evt) => setter(evt.target.value);
+  const { balance, setBalance, privateKey, publicKey, address } = useWallet();
 
   async function transfer(evt) {
-    evt.preventDefault();
-
+    if (balance < sendAmount) {
+      return;
+    }
+    const sendObj = {
+      sender: {
+        publicKey,
+        address,
+      },
+      amount: parseInt(sendAmount),
+      recipient,
+    };
+    let signature = await signMessage(JSON.stringify(sendObj), privateKey);
+    signature.r = signature.r.toString();
+    signature.s = signature.s.toString();
     try {
       const {
-        data: { balance },
-      } = await server.post(`send`, {
-        sender: address,
-        amount: parseInt(sendAmount),
-        recipient,
-      });
-      setBalance(balance);
+        data
+      } = await server.post("/send", { ...sendObj, hash: signature });
+      setBalance(data.balance);
+      toast.success("Transaction sent");
     } catch (ex) {
-      alert(ex.response.data.message);
+      console.error(ex);
+      toast.error("Transaction failed");
     }
   }
 
   return (
-    <form className="container transfer" onSubmit={transfer}>
+    <form className="container transfer">
       <h1>Send Transaction</h1>
 
       <label>
@@ -34,6 +63,7 @@ function Transfer({ address, setBalance }) {
           placeholder="1, 2, 3..."
           value={sendAmount}
           onChange={setValue(setSendAmount)}
+          error={balance < sendAmount}
         ></input>
       </label>
 
@@ -46,7 +76,11 @@ function Transfer({ address, setBalance }) {
         ></input>
       </label>
 
-      <input type="submit" className="button" value="Transfer" />
+      <input className="button" style={{
+        transition: "all 0.3s",
+        backgroundColor: balance < sendAmount ? "gray" : "",  
+        color: "white",
+      }} value="Transfer" onClick={transfer} disabled={balance < sendAmount}/>
     </form>
   );
 }

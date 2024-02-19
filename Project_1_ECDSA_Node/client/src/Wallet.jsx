@@ -3,22 +3,7 @@ import { useWallet } from "./provider/WalletProvider";
 import { useEffect, useState } from "react";
 
 function Wallet() {
-  const { address, setLogged } = useWallet();
-  const [balance, setBalance] = useState(0);
-
-  useEffect(() => {
-    async function getBalance() {
-      if (address) {
-        const {
-          data: { balance },
-        } = await server.get(`balance/${address}`);
-        setBalance(balance);
-      } else {
-        setBalance(0);
-      }
-    }
-    getBalance();
-  }, [address]);
+  const { address, setLogged, balance } = useWallet();
 
   return (
     <div className="container wallet">

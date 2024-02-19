@@ -1,14 +1,15 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import server from "../server";
 import { secp256k1 } from "ethereum-cryptography/secp256k1";
 import { toHex } from "ethereum-cryptography/utils";
 import { keccak256 } from "ethereum-cryptography/keccak";
-import server from "../server";
 export const WalletContext = createContext();
 
 export const WalletProvider = ({ children }) => {
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [address, setAddress] = useState("");
+  const [balance, setBalance] = useState(0);
   const [logged, setLogged] = useState(false);
 
   const getAddresse = (publicKey) => {
@@ -24,18 +25,29 @@ export const WalletProvider = ({ children }) => {
 
   useEffect(() => {
     const pk = localStorage.getItem("privateKey");
-    if (pk) {
-      recoverFromPrivateKey(pk);
-    }
+    if (!pk) return;
+    recoverFromPrivateKey(pk);
   }, []);
 
-  const generateWallet = () => {
+  const defineBalance = async (address) => {
+    const {data} = await server.get("/balance/" + address);
+    console.log(data);
+    setBalance(data.balance);
+  };
+
+  const generateWallet = async () => {
     const tmpPvtKey = secp256k1.utils.randomPrivateKey();
     const publicK = secp256k1.getPublicKey(tmpPvtKey);
+    const addr = getAddresse(publicK);
 
     setPublicKey(toHex(publicK));
     setPrivateKey(toHex(tmpPvtKey));
-    setAddress(getAddresse(publicK));
+    setAddress(addr);
+  
+    await server.post("/wallet", {
+      address: addr,
+    });
+    setBalance(0);
   };
 
   const recoverFromPrivateKey = (privateK) => {
@@ -45,10 +57,12 @@ export const WalletProvider = ({ children }) => {
     } catch (e) {
       return e.message;
     }
-
+    const addr = getAddresse(publicK);
     setPublicKey(toHex(publicK));
-    setAddress(getAddresse(publicK));
+    setAddress(addr);
     setPrivateKey(privateK);
+  
+    defineBalance(addr);
     return "";
   };
 
@@ -66,6 +80,8 @@ export const WalletProvider = ({ children }) => {
         recoverFromPrivateKey,
         isLogged,
         setLogged,
+        balance,
+        setBalance,
       }}
     >
       {children}
