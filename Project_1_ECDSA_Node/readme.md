@@ -9,23 +9,44 @@ For an overview of this project as well as getting started instructions, check o
 
 https://www.loom.com/share/0d3c74890b8e44a5918c4cacb3f646c4
  
-### Client
+### Getting started
 
-The client folder contains a [react app](https://reactjs.org/) using [vite](https://vitejs.dev/). To get started, follow these steps:
+To get started, you will need to install the following dependencies:
 
-1. Open up a terminal in the `/client` folder
-2. Run `npm install` to install all the depedencies
-3. Run `npm run dev` to start the application 
-4. Now you should be able to visit the app at http://127.0.0.1:5173/
+```
+docker
+docker-compose
+```
 
-### Server
+Once you have these installed, you can run the following command to start the server:
 
-The server folder contains a node.js server using [express](https://expressjs.com/). To run the server, follow these steps:
+```
 
-1. Open a terminal within the `/server` folder 
-2. Run `npm install` to install all the depedencies 
-3. Run `node index` to start the server 
+docker-compose up --build
 
-The application should connect to the default server port (3042) automatically! 
+```
 
-_Hint_ - Use [nodemon](https://www.npmjs.com/package/nodemon) instead of `node` to automatically restart the server on any changes.
+This will start the server and client. The client will be able to make requests to the server to transfer funds between different addresses. The server will only allow transfers that have been signed for by the owner of the address.
+
+## Features
+
+#### Address generation
+
+You can create a new Wallet or recover an existing one.
+
+![alt text](image-1.png)
+
+#### Get Faucet and Watch for other addresses balance
+
+You can get some coins from the faucet and watch for other addresses balance.
+I admit the UI is not the best, but it works ! 
+
+![alt text](image-2.png)
+
+#### Tx Duplication Prevention
+
+The server will not allow a transaction to be processed if it has already been processed. This is to prevent replay attacks. We do so by keeping a "tx-index" in the server's memory. This index is a list of all the transaction ids that have been processed. If a transaction comes in with an id that is already in the index, the server will reject it.
+
+The next available transaction id is obtainable by calling the `/block` endpoint.	
+
+![alt text](image.png)
