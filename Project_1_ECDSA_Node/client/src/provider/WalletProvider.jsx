@@ -47,7 +47,7 @@ export const WalletProvider = ({ children }) => {
     await server.post("/wallet", {
       address: addr,
     });
-    setBalance(0);
+    setBalance(50);
   };
 
   const recoverFromPrivateKey = (privateK) => {

@@ -16,7 +16,7 @@ function hashMessage(message) {
 async function signMessage(msg, PRIVATE_KEY) {
   const hash = hashMessage(msg);
   console.log("hash", hash);
-  const signature =  secp256k1.sign(hash, PRIVATE_KEY);
+  const signature = secp256k1.sign(hash, PRIVATE_KEY);
   return signature;
 }
 
@@ -30,6 +30,9 @@ function Transfer() {
     if (balance < sendAmount) {
       return;
     }
+    const res = await server.get("/block");
+    const tx_id = res.data.tx_id;
+  
     const sendObj = {
       sender: {
         publicKey,
@@ -37,19 +40,27 @@ function Transfer() {
       },
       amount: parseInt(sendAmount),
       recipient,
+      index: tx_id,
     };
     let signature = await signMessage(JSON.stringify(sendObj), privateKey);
     signature.r = signature.r.toString();
     signature.s = signature.s.toString();
     try {
-      const {
-        data
-      } = await server.post("/send", { ...sendObj, hash: signature });
+
+      const { data } = await server.post("/send", {
+        ...sendObj,
+        hash: signature,
+        index: tx_id,
+      });
+      console.log(JSON.stringify({
+        ...sendObj,
+        hash: signature,
+      }));
       setBalance(data.balance);
       toast.success("Transaction sent");
     } catch (ex) {
       console.error(ex);
-      toast.error("Transaction failed");
+      toast.error(ex.request.response);
     }
   }
 
@@ -76,11 +87,17 @@ function Transfer() {
         ></input>
       </label>
 
-      <input className="button" style={{
-        transition: "all 0.3s",
-        backgroundColor: balance < sendAmount ? "gray" : "",  
-        color: "white",
-      }} value="Transfer" onClick={transfer} disabled={balance < sendAmount}/>
+      <input
+        className="button"
+        style={{
+          transition: "all 0.3s",
+          backgroundColor: balance < sendAmount ? "gray" : "",
+          color: "white",
+        }}
+        value="Transfer"
+        onClick={transfer}
+        disabled={balance < sendAmount}
+      />
     </form>
   );
 }
