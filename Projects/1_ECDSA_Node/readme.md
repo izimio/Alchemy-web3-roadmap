@@ -30,20 +30,20 @@ This will start the server and client. The client will be able to make requests 
 
 ## Features
 
-#### Address generation
+### Address generation
 
 You can create a new Wallet or recover an existing one.
 
 ![alt text](image-1.png)
 
-#### Get Faucet and Watch for other addresses balance
+### Get Faucet and Watch for other addresses balance
 
 You can get some coins from the faucet and watch for other addresses balance.
 I admit the UI is not the best, but it works ! 
 
 ![alt text](image-2.png)
 
-#### Tx Duplication Prevention
+### Tx Duplication Prevention
 
 The server will not allow a transaction to be processed if it has already been processed. This is to prevent replay attacks. We do so by keeping a "tx-index" in the server's memory. This index is a list of all the transaction ids that have been processed. If a transaction comes in with an id that is already in the index, the server will reject it.
 
