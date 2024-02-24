@@ -1,14 +1,12 @@
 Cette section traite une nouvelle fois des arbres de merkel mais cette fois-ci dans le cas de la blockchain Ethereum.
 
-L'arbre de Merkle est utilisé pour stocker les transactions dans un block. Cependant, il est utilisé de manière différente que dans Bitcoin.
-
 Dans Ethereum il existe un nouveau type d'arbres de Merkle: l'arbre de Merkle Patricia.
 
 L'arbre de Merkle Patricia est un arbre de Merkle qui stocke les transactions dans un format trie.
 
 Un trie est une structure de données qui stocke des clés sous forme d'arbre. Chaque noeud de l'arbre est un hash de ses enfants.
 
-L'arbre de Merkle Patricia est utilisé pour stocker les transactions dans un block. Il est utilisé pour stocker les transactions, les comptes et les états de la blockchain.
+L'arbre de Merkle Patricia est utilisé pour stocker les transactions, les comptes et les états de la blockchain.
 
 La blockhain Ethereum utilise 4 arbres de Merkle Patricia:
 - Un arbre pour stocker les transactions (transactions, logs, etc) **Transactions Trie**
@@ -30,15 +28,15 @@ Voilà un exemple en ASCII d'un arbre de Merkle Patricia:
     (P) (O)
 ```
 
-Les mots sont stockés dans l'arbre de manière à ce que chaque lettre soit un hash de ses enfants.
-
 Les mots ici sont: 
     - HELP
     - HELLO
     - POW
     - PWD
 
-Si nous devions ajouter un nouveau mot comme `POWER` dans l'arbre, nous n'aurions pas besoin de stocker le mot en entier. Nous pourrions simplement stocker les lettres "ER" à la suite de "POW".
+Les mots sont stockés dans l'arbre de manière à ce que chaque lettre soit la clé d'un noeud pouvant contenir de la data
+
+Si nous devions ajouter un nouveau mot comme `POWER` dans l'arbre, nous n'aurions pas besoin de stocker le mot en entier. Nous pourrions simplement stocker les lettres `ER` à la suite de `POW`.
 
 Voici un exemple de code en JavaScript pour construire un arbre de Merkle Patricia:
 
