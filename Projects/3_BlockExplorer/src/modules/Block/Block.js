@@ -5,6 +5,8 @@ import Spinner from "../Spinner";
 import Txs from "./Txs";
 import BlockInfo from "./Info";
 
+import AcUnitIcon from "@mui/icons-material/AcUnit";
+
 const settings = {
   apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
   network: Network.ETH_SEPOLIA,
@@ -19,7 +21,12 @@ function Block() {
 
   const [blockNumber, setBlockNumber] = useState(-1);
   const [blockInfo, setBlockInfo] = useState();
+  const [freeze, setFreeze] = useState(false);
 
+  const setBlockNumberWs = (blockNumber) => {
+    if (freeze) return;
+    setBlockNumber(blockNumber);
+  }
   useEffect(() => {
     async function getBlockNumber() {
       if (block === "last" || block === "") {
@@ -46,7 +53,9 @@ function Block() {
 
   useEffect(() => {
     if (block === "last") {
-      alchemy.ws.on("block", (blockNumber) => setBlockNumber(blockNumber));
+      alchemy.ws.on("block", (blockNumber) => {
+        setBlockNumberWs(blockNumber);
+      });
     }
   }, [block]);
 
@@ -62,13 +71,28 @@ function Block() {
   if (isLoading) return <Spinner isLoading={isLoading} />;
   return (
     <div className="App">
-      <h1
-        style={{
-          textAlign: "center",
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+        <h1
+          style={{
+            textAlign: "center",
+          }}
+        >
+          Block: {blockNumber}
+        </h1>
+        <AcUnitIcon style={{ fontSize: 40 }} sx={{
+          color: freeze ? "#20c3d0" : "#b9e8ea",
+          cursor: "pointer",
+          padding: "5px",
+          borderRadius: "50%",
+          transition: "all 0.3s",
+          "&:hover": {
+            color: "#20c3d0",
+          },
+
         }}
-      >
-        Block: {blockNumber}
-      </h1>
+        onClick={() => setFreeze(!freeze)}
+        />
+      </div>
       <div>
         <BlockInfo blockInfo={blockInfo} />
       </div>

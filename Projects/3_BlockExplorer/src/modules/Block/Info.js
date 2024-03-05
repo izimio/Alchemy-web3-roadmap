@@ -35,7 +35,7 @@ export default function BlockInfo({ blockInfo }) {
   const dateString = date.toUTCString();
   return (
     <div>
-      <h1>Block Info:</h1>
+      <h1>Block Infos:</h1>
       <div
         style={{
           display: "flex",

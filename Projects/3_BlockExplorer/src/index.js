@@ -5,13 +5,15 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Block from "./modules/Block/Block";
 import Redirect from "./modules/redirect";
+import Account from "./modules/Account/Account";
+import TxModule from "./modules/Tx/TxModule";
 
 ReactDOM.render(
   <Router>
-    <Route exact path="/" component={<Redirect to="/block/last" />} />
+    <Route exact path="/" component={Redirect} />
     <Route path="/block/:block" component={Block} />
-    <Route path="/tx/:tx" component={<></>} />
-    <Route path="/account/:account" component={<></>} />
+    <Route path="/tx/:tx" component={TxModule} />
+    <Route path="/account/:account" component={Account} />
   </Router>,
   document.getElementById("root")
 );
