@@ -10,6 +10,7 @@ import TxModule from "./modules/Tx/TxModule";
 
 ReactDOM.render(
   <Router>
+      <h2>Blockchain Explorer</h2>
     <Route exact path="/" component={Redirect} />
     <Route path="/block/:block" component={Block} />
     <Route path="/tx/:tx" component={TxModule} />

@@ -16,11 +16,12 @@ function IcoValue({ Icon, value }) {
         display: "flex",
         gap: "10px",
         alignItems: "center",
-        color: "black",
         width: "45%",
       }}
     >
-      <Icon />
+      <Icon sx={{
+        color: "black",
+      }} />
       <span>{value || "Nothing to show :/"}</span>
     </div>
   );
@@ -54,7 +55,7 @@ export default function BlockInfo({ blockInfo }) {
           Icon={OilBarrelIcon}
           value={(feePerGas / 1e18).toFixed(20) + " Gwei"}
         />
-        <Link href={`/account/${blockInfo.miner}`}>
+        <Link  href={`/account/${blockInfo.miner}`}>
           <IcoValue Icon={EngineeringIcon} value={blockInfo.miner} />
         </Link>
         <IcoValue Icon={MoreIcon} value={blockInfo.extraData} />
