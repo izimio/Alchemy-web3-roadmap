@@ -1,0 +1,3 @@
+[submodule "4_Smart_Contract_Basics/Intro_to_Hardhat/project/lib/forge-std"]
+	path = 4_Smart_Contract_Basics/Intro_to_Hardhat/project/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
