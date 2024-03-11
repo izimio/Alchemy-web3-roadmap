@@ -7,6 +7,8 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 export async function approve(escrowContract, signer) {
   const approveTxn = await escrowContract.connect(signer).approve();
+  console.log('Approving transfer...');
+  console.log('Transaction hash:', approveTxn.hash);
   await approveTxn.wait();
 }
 
@@ -14,6 +16,7 @@ function App() {
   const [escrows, setEscrows] = useState([]);
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
+  const [gvalue, setValue] = useState();
 
   useEffect(() => {
     async function getAccounts() {
@@ -29,8 +32,8 @@ function App() {
   async function newContract() {
     const beneficiary = document.getElementById('beneficiary').value;
     const arbiter = document.getElementById('arbiter').value;
-    const value = ethers.BigNumber.from(document.getElementById('wei').value);
-    const escrowContract = await deploy(signer, arbiter, beneficiary, value);
+    const value = ethers.BigNumber.from(gvalue);
+    const escrowContract = await deploy(signer, arbiter, beneficiary,   gvalue);
 
 
     const escrow = {
@@ -71,7 +74,13 @@ function App() {
           Deposit Amount (in Wei)
           <input type="text" id="wei" />
         </label>
-
+        <label>
+          Value
+          <input type="number"
+            value={gvalue}
+            onChange={(e) => setValue(e.target.value)}
+          />
+        </label>
         <div
           className="button"
           id="deploy"
