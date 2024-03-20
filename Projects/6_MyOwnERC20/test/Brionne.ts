@@ -32,7 +32,9 @@ describe("Brionne", function () {
   it("Should not be allowed to run an airdrop", async function () {
     const {brionne, owner, otherAccount} = await loadFixture(deploy);
     const otherAccountBalance = await brionne.balanceOf(otherAccount.address);
+  
     await expect(brionne.connect(owner).airdrop([otherAccount.address, owner.address], 1000)).to.be.fulfilled;
+  
     const otherAccountBalanceAfter = await brionne.balanceOf(otherAccount.address);
     expect(otherAccountBalanceAfter).to.equal(BigInt(otherAccountBalance) + BigInt(1000));
   });
