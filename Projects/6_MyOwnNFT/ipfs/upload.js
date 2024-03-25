@@ -9,21 +9,25 @@ async function run() {
             name: "My First NFT",
             attributes: [
             {
-                "trait_type": "Peace",
+                "trait_type": "Epitech",
                 "value": "10" 
             },
             {
-                "trait_type": "Love",
+                "trait_type": "iExec",
                 "value": "100"
             },
             {
-                "trait_type": "Web3",
+                "trait_type": "Anaïs",
                 "value": "1000"
+            },
+            {
+                "trait_type": "Brionne",
+                "value": "69610"
             }
             ],
             // update the IPFS CID to be your image CID
-            image: "QmWR7nXezgnL2S2njZvjsQytcheBktUr3mMP6GnegQvhAr",
-            description: "So much PLW3!",
+            image: "ipfs://QmWR7nXezgnL2S2njZvjsQytcheBktUr3mMP6GnegQvhAr",
+            description: "Brionne NFT!",
         })
     };
 

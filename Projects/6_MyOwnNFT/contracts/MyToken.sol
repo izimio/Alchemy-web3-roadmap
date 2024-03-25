@@ -11,7 +11,7 @@ contract MyToken is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("BRIONNE", "BRI") {}
+    constructor() ERC721("BRIONNE2", "BRI") {}
 
     function supportsInterface(bytes4 interfaceId)
         public

@@ -11,7 +11,7 @@ async function main() {
   // mint one to yourself!
   const signer0 = await ethers.provider.getSigner(0);
 
-  await nft.safeMint(await signer0.getAddress(), "ipfs://QmWare9jJ7P9fHWkBM93axayYjHTapM8uiw7hDJSBWFbNK");
+  await nft.safeMint(await signer0.getAddress(), "ipfs://QmPkWKq1jcMYbyANi5juR6NSwgomPa7fBgUKX7oWL2tG2x");
 
   console.log("NFT Minted!");
 }
